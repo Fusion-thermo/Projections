@@ -264,10 +264,6 @@ def debug(points):
 
 
 
-
-
-
-
 fenetre=Tk()
 fenetre.attributes('-fullscreen', True)
 Canevas=Canvas(fenetre,height=hauteur,width=largeur)
