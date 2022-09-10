@@ -8,3 +8,8 @@ Le cube peut être tourné, translaté et zoomé.
 
 Projection cavalière :
 Pareil mais en perspective cavalière.
+
+Visualisation 4D :
+
+Visualisation d'un tesseract avec certains rotations.
+Voir https://www.youtube.com/watch?v=iGO12Z5Lw8s pour plus d'infos.
