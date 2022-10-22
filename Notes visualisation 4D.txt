@@ -1,0 +1,3 @@
+https://stackoverflow.com/questions/17775019/how-do-i-get-a-3d-cross-section-of-a-4d-mesh
+https://hollasch.github.io/ray4/Four-Space_Visualization_of_4D_Objects.html
+https://luicat.github.io/2018/05/23/4D-rendering.html
