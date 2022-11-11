@@ -50,7 +50,7 @@ class point:
 		self.y=y
 		self.z=z
 		self.w=w
-		#Ry
+		#Rxz
 		self.phi2=atan2(x,z)
 		self.phi_initial2=self.phi2
 		#Rotations 4D
@@ -74,7 +74,7 @@ class point:
 		else:
 			self.nom=nom
 
-	def rotate_Ry(self,phi2):
+	def rotate_Rxz(self,phi2):
 		'''
 		seul phi1 bouge
 		on recalcule x, y z
@@ -86,8 +86,8 @@ class point:
 		self.phi2=self.phi_initial2+phi2
 
 		coos=np.array([[self.x],[self.y],[self.z]])
-		Ry=np.array([[cos(theta),0,sin(theta)],[0,1,0],[-sin(theta),0,cos(theta)]])
-		result=np.dot(Ry,coos)
+		Rxz=np.array([[cos(theta),0,sin(theta)],[0,1,0],[-sin(theta),0,cos(theta)]])
+		result=np.dot(Rxz,coos)
 		self.x=result[0][0]
 		self.y=result[1][0]
 		self.z=result[2][0]
@@ -175,10 +175,10 @@ class objet_4D:
 					self.arretes.append((dot1,dot2))
 		print("{} arrêtes".format(len(self.arretes)))
 
-def rotation_Ry(rien):
+def rotation_Rxz(rien):
 	global objet
 	for dot in objet.points:
-		dot.rotate_Ry(radians(int(Ry.get())))
+		dot.rotate_Rxz(radians(int(Rxz.get())))
 	affichage_objet(objet)
 
 def doublerotate(rien):
@@ -205,34 +205,34 @@ def affichage_objet(objet):
 	for dot in objet.points:
 		dot.projections(objet)
 		rayon=rayon_point*(objet.distance_plan-dot.x3d*coeff_distance)*(objet.distance_plan/objet.camera.x)
-		#create_text pour avoir les coos à côté des points et create_oval pour avoir la distance des points par rapport au plan visualisée (pour savoir s'il est avant ou après l'origine)
 		Canevas.create_oval(origine_x + dot.y2d * objet.unite - rayon, origine_y - dot.z2d * objet.unite - rayon, origine_x + dot.y2d * objet.unite + rayon, origine_y - dot.z2d * objet.unite + rayon,outline="red",width=2)
+		#create_text pour avoir les coos à côté des points et create_oval pour avoir la distance des points par rapport au plan visualisée (pour savoir s'il est avant ou après l'origine)
 		#Canevas.create_text(origine_x + dot.y2d* objet.unite,origine_y - dot.z2d* objet.unite,text=dot.nom)
 	for dots in objet.arretes:
 		moyenne=(dots[0].x3d+dots[1].x3d)/2
-		Canevas.create_line(origine_x + dots[0].y2d* objet.unite,origine_y - dots[0].z2d* objet.unite,origine_x + dots[1].y2d* objet.unite,origine_y - dots[1].z2d* objet.unite,fill="blue",width=(objet.distance_plan-moyenne)*(objet.distance_plan/objet.camera.x))#
+		Canevas.create_line(origine_x + dots[0].y2d* objet.unite,origine_y - dots[0].z2d* objet.unite,origine_x + dots[1].y2d* objet.unite,origine_y - dots[1].z2d* objet.unite,fill="blue",width=(objet.distance_plan-moyenne)*(objet.distance_plan/objet.camera.x))
 
 
 def initialisation():
 	#all 6 convex regular 4-polytope = 4-polytope régulier convexe
 	global objet
 	choix=value.get()
-	Ry.set(0)
+	Rxz.set(0)
 	Rw.set(0)
 	Rxy.set(0)
 	Rzw.set(0)
 
 	if choix=="1":
+		#5-cell
+		coos=[point(1,1,1,-1/sqrt(5)),point(1,-1,-1,-1/sqrt(5)),point(-1,1,-1,-1/sqrt(5)),point(-1,-1,1,-1/sqrt(5)),point(0,0,0,4/sqrt(5))]
+		longueur_arrete=2*sqrt(2)
+		objet=objet_4D(coos,longueur_arrete,400,3,point(5,0,0))
+	elif choix=="2":
 		#8-cell
 		coos_tesseract=permutations((0.5,0.5,0.5,0.5))[:]+permutations((-0.5,0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5,-0.5))[:]
 		coos=[point(i[0],i[1],i[2],i[3]) for i in coos_tesseract]
 		longueur_arrete=1
 		objet=objet_4D(coos,longueur_arrete,880,3,point(5,0,0))
-	elif choix=="2":
-		#5-cell
-		coos=[point(1,1,1,-1/sqrt(5)),point(1,-1,-1,-1/sqrt(5)),point(-1,1,-1,-1/sqrt(5)),point(-1,-1,1,-1/sqrt(5)),point(0,0,0,4/sqrt(5))]
-		longueur_arrete=2*sqrt(2)
-		objet=objet_4D(coos,longueur_arrete,400,3,point(5,0,0))
 	elif choix=="3":
 		#16 cell
 		coos_hexadecachore=permutations((1,0,0,0))[:]+permutations((-1,0,0,0))[:]
@@ -248,19 +248,18 @@ def initialisation():
 	elif choix=="5":
 		#120-cell
 		coos_hecatonicosachore=permutations((0,0,2,2))[:]+permutations((0,0,-2,2))[:]+permutations((0,0,-2,-2))[:]
-		#coos_hecatonicosachore=permutations_cycliques((0,0,2,2))[:]+permutations_cycliques((0,0,-2,2))[:]+permutations_cycliques((0,0,-2,-2))[:]
 		a=len(coos_hecatonicosachore)
-		print(a)
+		#print(a)
 		coos_hecatonicosachore+=permutations((1,1,1,sqrt(5)))[:]+permutations((-1,1,1,sqrt(5)))[:]+permutations((-1,-1,1,sqrt(5)))[:]+permutations((-1,-1,-1,sqrt(5)))[:] + permutations((1,1,1,-sqrt(5)))[:]+permutations((-1,1,1,-sqrt(5)))[:]+permutations((-1,-1,1,-sqrt(5)))[:]+permutations((-1,-1,-1,-sqrt(5)))[:]
 		b=len(coos_hecatonicosachore)
-		print(b-a)
+		#print(b-a)
 		coos_hecatonicosachore+=permutations((g_ratio,g_ratio,g_ratio,1/g_ratio**2))[:]+permutations((-g_ratio,g_ratio,g_ratio,1/g_ratio**2))[:]+permutations((-g_ratio,-g_ratio,g_ratio,1/g_ratio**2))[:]+permutations((-g_ratio,-g_ratio,-g_ratio,1/g_ratio**2))[:] + permutations((g_ratio,g_ratio,g_ratio,-1/g_ratio**2))[:]+permutations((-g_ratio,g_ratio,g_ratio,-1/g_ratio**2))[:]+permutations((-g_ratio,-g_ratio,g_ratio,-1/g_ratio**2))[:]+permutations((-g_ratio,-g_ratio,-g_ratio,-1/g_ratio**2))[:]
 		c=len(coos_hecatonicosachore)
-		print(c-b)
+		#print(c-b)
 		coos_hecatonicosachore+=permutations((1/g_ratio,1/g_ratio,1/g_ratio,g_ratio**2))[:]+permutations((-1/g_ratio,1/g_ratio,1/g_ratio,g_ratio**2))[:]+permutations((-1/g_ratio,-1/g_ratio,1/g_ratio,g_ratio**2))[:]+permutations((-1/g_ratio,-1/g_ratio,-1/g_ratio,g_ratio**2))[:] + permutations((1/g_ratio,1/g_ratio,1/g_ratio,-g_ratio**2))[:]+permutations((-1/g_ratio,1/g_ratio,1/g_ratio,-g_ratio**2))[:]+permutations((-1/g_ratio,-1/g_ratio,1/g_ratio,-g_ratio**2))[:]+permutations((-1/g_ratio,-1/g_ratio,-1/g_ratio,-g_ratio**2))[:]
 		d=len(coos_hecatonicosachore)
-		print(d-c)
-		print(a,b,c,d)
+		#print(d-c)
+		#print(a,b,c,d)
 
 		permut=permutations((0,1,2,3))[:]
 		parite_paire=[]
@@ -268,14 +267,14 @@ def initialisation():
 			p=Permutation(coos)
 			if p.parity()==1:
 				parite_paire.append(coos)
-		print("paires",len(parite_paire))
+		#print("paires",len(parite_paire))
 
 		permut_coos1=[(0,1/g_ratio**2,1,g_ratio**2),(0,-1/g_ratio**2,1,g_ratio**2),(0,1/g_ratio**2,-1,g_ratio**2),(0,1/g_ratio**2,1,-g_ratio**2),(0,-1/g_ratio**2,-1,g_ratio**2),(0,1/g_ratio**2,-1,-g_ratio**2),(0,-1/g_ratio**2,1,-g_ratio**2),(0,-1/g_ratio**2,-1,-g_ratio**2)]
-		print(len(permut_coos1),len(parite_paire)*len(permut_coos1))
+		#print(len(permut_coos1),len(parite_paire)*len(permut_coos1))
 		permut_coos2=[(0,1/g_ratio,g_ratio,sqrt(5)),(0,-1/g_ratio,g_ratio,sqrt(5)),(0,1/g_ratio,-g_ratio,sqrt(5)),(0,1/g_ratio,g_ratio,-sqrt(5)),(0,-1/g_ratio,-g_ratio,sqrt(5)),(0,1/g_ratio,-g_ratio,-sqrt(5)),(0,-1/g_ratio,g_ratio,-sqrt(5)),(0,-1/g_ratio,-g_ratio,-sqrt(5))]
-		print(len(permut_coos2),len(parite_paire)*len(permut_coos2))
+		#print(len(permut_coos2),len(parite_paire)*len(permut_coos2))
 		permut_coos3=[(1/g_ratio,1,g_ratio,2),(-1/g_ratio,1,g_ratio,2),(1/g_ratio,-1,g_ratio,2),(1/g_ratio,1,-g_ratio,2),(1/g_ratio,1,g_ratio,-2),(-1/g_ratio,-1,g_ratio,2),(1/g_ratio,-1,-g_ratio,2),(1/g_ratio,1,-g_ratio,-2),(-1/g_ratio,1,g_ratio,-2),(-1/g_ratio,-1,-g_ratio,2),(1/g_ratio,-1,-g_ratio,-2),(-1/g_ratio,1,-g_ratio,-2),(-1/g_ratio,-1,g_ratio,-2),(-1/g_ratio,-1,-g_ratio,-2),(-1/g_ratio,1,-g_ratio,2),(1/g_ratio,-1,g_ratio,-2)]
-		print(len(permut_coos3),len(parite_paire)*len(permut_coos3))
+		#print(len(permut_coos3),len(parite_paire)*len(permut_coos3))
 
 		for paire in parite_paire:
 			for coordonnes in permut_coos1:
@@ -286,34 +285,34 @@ def initialisation():
 				coos_hecatonicosachore.append((coordonnes[paire[0]],coordonnes[paire[1]],coordonnes[paire[2]],coordonnes[paire[3]]))
 
 		coos=[point(i[0],i[1],i[2],i[3]) for i in coos_hecatonicosachore]
-		print(len(coos))
+		#print(len(coos))
 		longueur_arrete=2/g_ratio**2
-		print(longueur_arrete)
+		#print(longueur_arrete)
 		objet=objet_4D(coos,longueur_arrete,700,30,point(1000,0,0))
-	elif choix=="6":
+	else:
 		#600-cell
 		coos_hexacosichore=permutations((1,0,0,0))[:]+permutations((-1,0,0,0))[:]
 		a=len(coos_hexacosichore)
-		print(a)
+		#print(a)
 		coos_hexacosichore+=permutations((0.5,0.5,0.5,0.5))[:]+permutations((-0.5,0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5,-0.5))[:]
 		b=len(coos_hexacosichore)
-		print(b-a)
+		#print(b-a)
 		permut=permutations((0,1,2,3))[:]
 		parite_paire=[]
 		for coos in permut:
 			p=Permutation(coos)
 			if p.parity()==1:
 				parite_paire.append(coos)
-		print("paires",len(parite_paire))
+		#print("paires",len(parite_paire))
 
 		permut_coos=[(g_ratio/2, 0.5, 1/(g_ratio*2),0), (-g_ratio/2, 0.5, 1/(g_ratio*2),0), (g_ratio/2, -0.5, 1/(g_ratio*2),0), (g_ratio/2, 0.5, -1/(g_ratio*2),0), (-g_ratio/2, -0.5, 1/(g_ratio*2),0), (g_ratio/2, -0.5, -1/(g_ratio*2),0), (-g_ratio/2, 0.5, -1/(g_ratio*2),0), (-g_ratio/2, -0.5, -1/(g_ratio*2),0)]
-		print(len(permut_coos),len(parite_paire)*len(permut_coos))
+		#print(len(permut_coos),len(parite_paire)*len(permut_coos))
 
 		for paire in parite_paire:
 			for coordonnes in permut_coos:
 				coos_hexacosichore.append((coordonnes[paire[0]],coordonnes[paire[1]],coordonnes[paire[2]],coordonnes[paire[3]]))
 		coos=[point(i[0],i[1],i[2],i[3]) for i in coos_hexacosichore]
-		print(len(coos))
+		#print(len(coos))
 		longueur_arrete=1/g_ratio
 		objet=objet_4D(coos,longueur_arrete,700,3,point(5,0,0))
 
@@ -326,33 +325,33 @@ Canevas=Canvas(fenetre,height=hauteur,width=largeur)
 Canevas.pack(side=LEFT)
 
 
-Ry=StringVar()
-Ry.set(0)
-angle_Ry=Scale(fenetre,  orient='vertical',  from_=360,  to=0,  resolution=1,  tickinterval=120,  label='Ry',  variable=Ry,  command=rotation_Ry)
-angle_Ry.pack()
+Rxz=StringVar()
+Rxz.set(0)
+angle_Rxz=Scale(fenetre,  orient='vertical',  from_=360,  to=0,  resolution=1,  tickinterval=120,  label='Rotation XZ',  variable=Rxz,  command=rotation_Rxz)
+angle_Rxz.pack()
+
+Rxy=StringVar()
+Rxy.set(0)
+angle_Rxy=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Rotation XY',  variable=Rxy,  command=rotation_Rxy)
+angle_Rxy.pack()
+
+Rzw=StringVar()
+Rzw.set(0)
+angle_Rzw=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Rotation ZW',  variable=Rzw,  command=rotation_Rzw)
+angle_Rzw.pack()
 
 Rw=StringVar()
 Rw.set(0)
 angle_Rw=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Double rotation',  variable=Rw,  command=doublerotate)
 angle_Rw.pack()
 
-Rxy=StringVar()
-Rxy.set(0)
-angle_Rxy=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Rotation xy',  variable=Rxy,  command=rotation_Rxy)
-angle_Rxy.pack()
-
-Rzw=StringVar()
-Rzw.set(0)
-angle_Rzw=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Rotation zw',  variable=Rzw,  command=rotation_Rzw)
-angle_Rzw.pack()
-
 demarrer = Button(fenetre,  text = 'Start',  command = initialisation)
 demarrer.pack()
 
 value=StringVar()
-value.set(1)
-Choix1=Radiobutton(fenetre, text="Tesseract - 8 cell",variable=value, value=1)
-Choix2=Radiobutton(fenetre, text="Pentachore - 5 cell",variable=value, value=2)
+value.set(2)
+Choix1=Radiobutton(fenetre, text="Pentachore - 5 cell",variable=value, value=1)
+Choix2=Radiobutton(fenetre, text="Tesseract - 8 cell",variable=value, value=2)
 Choix3=Radiobutton(fenetre, text="Hexadecachore - 16 cell",variable=value, value=3)
 Choix4=Radiobutton(fenetre, text="Icositetrachore - 24 cell",variable=value, value=4)
 Choix5=Radiobutton(fenetre, text="Hécatonicosachore - 120 cell",variable=value, value=5)

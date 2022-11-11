@@ -201,26 +201,26 @@ def initialisation():
 		coos=[point(1,0,-1/sqrt(2)),point(-1,0,-1/sqrt(2)),point(0,1,1/sqrt(2)),point(0,-1,1/sqrt(2))]
 		longueur_arrete=2
 		objet=objet_3D(coos,longueur_arrete,600,5,point(10,0,0))
-	if choix=="2":
+	elif choix=="2":
 		#cube
 		coos_cube=permutations((0.5,0.5,0.5))[:]+permutations((-0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5))[:]
 		coos=[point(i[0],i[1],i[2]) for i in coos_cube]
 		longueur_arrete=1
 		objet=objet_3D(coos,longueur_arrete,800,5,point(10,0,0))
-	if choix=="3":
+	elif choix=="3":
 		#Octaedre
 		coos_octaedre=permutations((1,0,0))[:]+permutations((-1,0,0))[:]
 		coos=[point(i[0],i[1],i[2]) for i in coos_octaedre]
 		longueur_arrete=sqrt(2)
 		objet=objet_3D(coos,longueur_arrete,700,5,point(10,0,0))
-	if choix=="4":
+	elif choix=="4":
 		#Dodecaedre
 		coos_dodecaedre=permutations((1,1,1))[:]+permutations((-1,1,1))[:]+permutations((-1,-1,1))[:]+permutations((-1,-1,-1))[:]
 		coos_dodecaedre+=permutations_cycliques((0,g_ratio,1/g_ratio))[:]+permutations_cycliques((0,-g_ratio,1/g_ratio))[:]+permutations_cycliques((0,g_ratio,-1/g_ratio))[:]+permutations_cycliques((0,-g_ratio,-1/g_ratio))[:]
 		coos=[point(i[0],i[1],i[2]) for i in coos_dodecaedre]
 		longueur_arrete=2/g_ratio
 		objet=objet_3D(coos,longueur_arrete,400,5,point(10,0,0))
-	if choix=="5":
+	else:
 		#Icosaedre
 		coos_icosaedre=permutations_cycliques((0,1,g_ratio))[:]+permutations_cycliques((0,-1,g_ratio))[:]+permutations_cycliques((0,1,-g_ratio))[:]+permutations_cycliques((0,-1,-g_ratio))[:]
 		coos=[point(i[0],i[1],i[2]) for i in coos_icosaedre]	
