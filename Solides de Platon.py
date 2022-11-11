@@ -197,16 +197,16 @@ def initialisation():
 	deplacement_z.set(0)
 
 	if choix=="1":
+		#Tetraedre
+		coos=[point(1,0,-1/sqrt(2)),point(-1,0,-1/sqrt(2)),point(0,1,1/sqrt(2)),point(0,-1,1/sqrt(2))]
+		longueur_arrete=2
+		objet=objet_3D(coos,longueur_arrete,600,5,point(10,0,0))
+	if choix=="2":
 		#cube
 		coos_cube=permutations((0.5,0.5,0.5))[:]+permutations((-0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5))[:]
 		coos=[point(i[0],i[1],i[2]) for i in coos_cube]
 		longueur_arrete=1
 		objet=objet_3D(coos,longueur_arrete,800,5,point(10,0,0))
-	if choix=="2":
-		#Tetraedre
-		coos=[point(1,0,-1/sqrt(2)),point(-1,0,-1/sqrt(2)),point(0,1,1/sqrt(2)),point(0,-1,1/sqrt(2))]
-		longueur_arrete=2
-		objet=objet_3D(coos,longueur_arrete,600,5,point(10,0,0))
 	if choix=="3":
 		#Octaedre
 		coos_octaedre=permutations((1,0,0))[:]+permutations((-1,0,0))[:]
@@ -259,9 +259,9 @@ demarrer = Button(fenetre,  text = 'Start',  command = initialisation)
 demarrer.pack()
 
 value=StringVar()
-value.set(1)
-Choix1=Radiobutton(fenetre, text="Cube",variable=value, value=1)
-Choix2=Radiobutton(fenetre, text="Tetraedre",variable=value, value=2)
+value.set(2)
+Choix1=Radiobutton(fenetre, text="Tetraedre",variable=value, value=1)
+Choix2=Radiobutton(fenetre, text="Cube",variable=value, value=2)
 Choix3=Radiobutton(fenetre, text="Octaedre",variable=value, value=3)
 Choix4=Radiobutton(fenetre, text="Dodecaedre",variable=value, value=4)
 Choix5=Radiobutton(fenetre, text="Icosaedre",variable=value, value=5)
