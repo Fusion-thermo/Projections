@@ -1,8 +1,7 @@
 from tkinter import *
-from math import sqrt, acos, atan2, cos, sin, pi
+from math import sqrt, atan2, cos, sin, pi
 import numpy as np
 import itertools
-from sympy.combinatorics import Permutation
 import scipy.constants
 
 g_ratio=scipy.constants.golden
@@ -57,9 +56,6 @@ class point:
 		#Ry
 		self.phi2=atan2(x,z)
 		self.phi_initial2=self.phi2
-		#décalages précédents
-		self.decalage_y_prec=0
-		self.decalage_z_prec=0
 		#point projeté
 		self.y2d=0
 		self.z2d=0
@@ -184,7 +180,7 @@ def affichage_objet(objet):
 	for dot in objet.points:
 		dot.projections(objet)
 		rayon=rayon_point*(objet.distance_plan-dot.x*coeff_distance)*(objet.distance_plan/objet.camera.x)
-		Canevas.create_oval(origine_x + dot.y2d * objet.unite - rayon, origine_y - dot.z2d * objet.unite - rayon, origine_x + dot.y2d * objet.unite + rayon, origine_y - dot.z2d * objet.unite + rayon,outline="red",width=2)
+		Canevas.create_oval(origine_x + dot.y2d * objet.unite - rayon, origine_y - dot.z2d * objet.unite - rayon, origine_x + dot.y2d * objet.unite + rayon, origine_y - dot.z2d * objet.unite + rayon,fill="red",width=2,outline="red")
 		#create_text pour avoir les coos à côté des points et create_oval pour avoir la distance des points par rapport au plan visualisée (pour savoir s'il est avant ou après l'origine)
 		#Canevas.create_text(origine_x + dot.y2d* objet.unite,origine_y - dot.z2d* objet.unite,text=dot.nom)
 	for dots in objet.arretes:
