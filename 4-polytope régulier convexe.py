@@ -1,5 +1,5 @@
 from tkinter import *
-from math import sqrt, acos, atan2, cos, sin, pi
+from math import sqrt, atan2, cos, sin, pi
 import numpy as np
 import itertools
 from sympy.combinatorics import Permutation
@@ -320,12 +320,10 @@ def initialisation():
 	affichage_objet(objet)
 
 
-
 fenetre=Tk()
 fenetre.attributes('-fullscreen', True)
 Canevas=Canvas(fenetre,height=hauteur,width=largeur)
 Canevas.pack(side=LEFT)
-
 
 
 Ry=StringVar()
@@ -368,8 +366,5 @@ Choix6.pack()
 
 Bouton1 = Button(fenetre,  text = 'Quitter - Close',  command = fenetre.destroy)
 Bouton1.pack()
-
-
-#affichage_objet(objet)
 
 fenetre.mainloop()

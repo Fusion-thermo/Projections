@@ -19,11 +19,6 @@ il manque une rotation autour de x mais elle n'a pas d'intérêt, et une transla
 phi1 correspond au curseur phi et phi2 correspond au curseur theta
 '''
 
-		#self.r=sqrt(x**2 + z**2)
-		#self.theta_c=atan2(-z,x)
-		#self.z_c=y
-
-
 def radians(angle):
 	return angle*pi/180
 
@@ -244,12 +239,6 @@ def affichage_repere(points):
 
 def debug(points):
 	print([vars(dot) for dot in points])
-
-
-
-
-
-
 
 
 fenetre=Tk()

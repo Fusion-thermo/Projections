@@ -18,11 +18,6 @@ il manque une rotation autour de x mais elle n'a pas d'intérêt, et une transla
 phi1 correspond au curseur phi et phi2 correspond au curseur theta
 '''
 
-		#self.r=sqrt(x**2 + z**2)
-		#self.theta_c=atan2(-z,x)
-		#self.z_c=y
-
-
 def radians(angle):
 	return angle*pi/180
 
@@ -263,14 +258,10 @@ def debug(points):
 	print([vars(dot) for dot in points])
 
 
-
-
 fenetre=Tk()
 fenetre.attributes('-fullscreen', True)
 Canevas=Canvas(fenetre,height=hauteur,width=largeur)
 Canevas.pack(side=LEFT)
-
-
 
 theta=StringVar()
 theta.set(0)
@@ -297,12 +288,8 @@ deplacement_z.set(0)
 decalage_z=Scale(fenetre,  orient='vertical',  from_=3,  to=-3,  resolution=0.1,  tickinterval=1,  label='z',  variable=deplacement_z,  command=deplace_z)
 decalage_z.pack()
 
-
-
 Bouton1 = Button(fenetre,  text = 'Quitter',  command = fenetre.destroy)
 Bouton1.pack()
-
-
 
 
 affichage_carre(carre)
