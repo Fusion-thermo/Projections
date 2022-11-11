@@ -48,6 +48,9 @@ class point:
 		self.x=x
 		self.y=y
 		self.z=z
+		self.x_initial=x
+		self.y_initial=y
+		self.z_initial=z
 		#Rz
 		self.phi1=atan2(y,x)
 		self.phi_initial1=self.phi1
@@ -60,7 +63,6 @@ class point:
 		#point projeté
 		self.y2d=0
 		self.z2d=0
-
 
 		if nom=="":
 			self.nom=str((round(x,1),round(y,1),round(z,1)))
@@ -81,13 +83,12 @@ class point:
 		coos=np.array([[self.x],[self.y],[self.z]])
 		Rz=np.array([[cos(theta),-sin(theta),0],[sin(theta),cos(theta),0],[0,0,1]])
 		result=np.dot(Rz,coos)
-		#print(coos,result)
 		self.x=result[0][0]
 		self.y=result[1][0]
-		self.z=result[2][0]
 
 		self.phi2=atan2(self.x,self.z)
 		self.phi_initial2=self.phi2 - radians(int(Ry.get()))
+		self.y_initial=self.y+float(deplacement_y.get())
 
 		if "(" in self.nom:
 			self.nom=str((round(self.x,1),round(self.y,1),round(self.z,1)))
@@ -103,21 +104,17 @@ class point:
 		Ry=np.array([[cos(theta),0,sin(theta)],[0,1,0],[-sin(theta),0,cos(theta)]])
 		result=np.dot(Ry,coos)
 		self.x=result[0][0]
-		self.y=result[1][0]
 		self.z=result[2][0]
 
 		self.phi1=atan2(self.y,self.x)
 		self.phi_initial1=self.phi1 - radians(int(Rz.get()))
+		self.z_initial=self.z+float(deplacement_z.get())
 
 		if "(" in self.nom:
 			self.nom=str((round(self.x,1),round(self.y,1),round(self.z,1)))
 
 	def deplace_y(self,y):
-		if y-self.decalage_y_prec>0:
-			self.y-=0.5
-		else:
-			self.y+=0.5
-		self.decalage_y_prec=y
+		self.y=self.y_initial+y
 
 		self.phi2=atan2(self.x,self.z)
 		self.phi_initial2=self.phi2 - radians(int(Ry.get()))
@@ -126,11 +123,7 @@ class point:
 		self.phi_initial1=self.phi1 - radians(int(Rz.get()))
 
 	def deplace_z(self,z):
-		if z-self.decalage_z_prec>0:
-			self.z-=0.5
-		else:
-			self.z+=0.5
-		self.decalage_z_prec=z
+		self.z=self.z_initial+z
 
 		self.phi2=atan2(self.x,self.z)
 		self.phi_initial2=self.phi2 - radians(int(Ry.get()))
@@ -174,13 +167,13 @@ def rotation_Rz(rien):
 def deplace_y(rien):
 	global objet
 	for dot in objet.points:
-		dot.deplace_y(float(deplacement_y.get()))
+		dot.deplace_y(-float(deplacement_y.get()))
 	affichage_objet(objet)
 
 def deplace_z(rien):
 	global objet
 	for dot in objet.points:
-		dot.deplace_z(float(deplacement_z.get()))
+		dot.deplace_z(-float(deplacement_z.get()))
 	affichage_objet(objet)
 
 
@@ -196,8 +189,7 @@ def affichage_objet(objet):
 		#Canevas.create_text(origine_x + dot.y2d* objet.unite,origine_y - dot.z2d* objet.unite,text=dot.nom)
 	for dots in objet.arretes:
 		moyenne=(dots[0].x+dots[1].x)/2
-		Canevas.create_line(origine_x + dots[0].y2d* objet.unite,origine_y - dots[0].z2d* objet.unite,origine_x + dots[1].y2d* objet.unite,origine_y - dots[1].z2d* objet.unite,fill="blue",width=(objet.distance_plan-moyenne)*(objet.distance_plan/objet.camera.x))#
-
+		Canevas.create_line(origine_x + dots[0].y2d* objet.unite,origine_y - dots[0].z2d* objet.unite,origine_x + dots[1].y2d* objet.unite,origine_y - dots[1].z2d* objet.unite,fill="blue",width=(objet.distance_plan-moyenne)*(objet.distance_plan/objet.camera.x))
 
 def initialisation():
 	#all 6 convex regular 4-polytope = 4-polytope régulier convexe
