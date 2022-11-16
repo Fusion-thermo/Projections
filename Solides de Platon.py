@@ -128,9 +128,9 @@ class point:
 		self.phi_initial1=self.phi1 - radians(int(Rz.get()))
 
 	def projections(self,objet):
-		coeff1=(objet.distance_plan - self.x)/(objet.camera.x - self.x)
-		self.y2d=coeff1 * (objet.camera.y-self.y)
-		self.z2d=coeff1 * (objet.camera.z-self.z)
+		coeff=(objet.distance_plan - self.x)/(objet.camera.x - self.x)
+		self.y2d=coeff * (objet.camera.y-self.y)
+		self.z2d=coeff * (objet.camera.z-self.z)
 
 
 class objet_3D:
