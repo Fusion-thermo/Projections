@@ -20,6 +20,7 @@ matrices de rotation pour les rotations
 il manque une rotation autour de x mais elle n'a pas d'intérêt, et une translation selon x sans intérêt
 https://www.youtube.com/watch?v=iGO12Z5Lw8s
 une lumière 4D éclaire l'objet le projetant en 3D. Puis on projette ces coos 3D sur l'écran 2D.
+
 '''
 
 def radians(angle):
@@ -172,6 +173,10 @@ class objet_4D:
 				length=sqrt((dot1.x-dot2.x)**2 + (dot1.y-dot2.y)**2 + (dot1.z-dot2.z)**2 + (dot1.w-dot2.w)**2)
 				if round(length,2)==round(self.longueur_arrete,2) and (dot1,dot2) not in self.arretes and (dot2,dot1) not in self.arretes:
 					self.arretes.append((dot1,dot2))
+					print(round(length,2),round(self.longueur_arrete,2),"T")
+				elif round(length,2)!=round(self.longueur_arrete,2):
+					print(round(length,2),round(self.longueur_arrete,2),False)
+				
 		print("{} arrêtes".format(len(self.arretes)))
 
 def rotation_Rxz(rien):
@@ -290,10 +295,10 @@ def initialisation():
 		objet=objet_4D(coos,longueur_arrete,700,30,point(1000,0,0))
 	else:
 		#600-cell
-		coos_hexacosichore=permutations((1,0,0,0))[:]+permutations((-1,0,0,0))[:]
+		coos_hexacosichore=permutations((2,0,0,0))[:]+permutations((-2,0,0,0))[:]
 		a=len(coos_hexacosichore)
 		#print(a)
-		coos_hexacosichore+=permutations((0.5,0.5,0.5,0.5))[:]+permutations((-0.5,0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5,0.5))[:]+permutations((-0.5,-0.5,-0.5,-0.5))[:]
+		coos_hexacosichore+=permutations((1,1,1,1))[:]+permutations((-1,1,1,1))[:]+permutations((-1,-1,1,1))[:]+permutations((-1,-1,-1,1))[:]+permutations((-1,-1,-1,-1))[:]
 		b=len(coos_hexacosichore)
 		#print(b-a)
 		permut=permutations((0,1,2,3))[:]
@@ -304,7 +309,7 @@ def initialisation():
 				parite_paire.append(coos)
 		#print("paires",len(parite_paire))
 
-		permut_coos=[(g_ratio/2, 0.5, 1/(g_ratio*2),0), (-g_ratio/2, 0.5, 1/(g_ratio*2),0), (g_ratio/2, -0.5, 1/(g_ratio*2),0), (g_ratio/2, 0.5, -1/(g_ratio*2),0), (-g_ratio/2, -0.5, 1/(g_ratio*2),0), (g_ratio/2, -0.5, -1/(g_ratio*2),0), (-g_ratio/2, 0.5, -1/(g_ratio*2),0), (-g_ratio/2, -0.5, -1/(g_ratio*2),0)]
+		permut_coos=[(g_ratio, 1, 1/(g_ratio),0), (-g_ratio, 1, 1/(g_ratio),0), (g_ratio, -1, 1/(g_ratio),0), (g_ratio, 1, -1/(g_ratio),0), (-g_ratio, -1, 1/(g_ratio),0), (g_ratio, -1, -1/(g_ratio),0), (-g_ratio, 1, -1/(g_ratio),0), (-g_ratio, -1, -1/(g_ratio),0)]
 		#print(len(permut_coos),len(parite_paire)*len(permut_coos))
 
 		for paire in parite_paire:
@@ -312,7 +317,7 @@ def initialisation():
 				coos_hexacosichore.append((coordonnes[paire[0]],coordonnes[paire[1]],coordonnes[paire[2]],coordonnes[paire[3]]))
 		coos=[point(i[0],i[1],i[2],i[3]) for i in coos_hexacosichore]
 		#print(len(coos))
-		longueur_arrete=1/g_ratio
+		longueur_arrete=2/g_ratio
 		objet=objet_4D(coos,longueur_arrete,700,3,point(5,0,0))
 
 	affichage_objet(objet)
