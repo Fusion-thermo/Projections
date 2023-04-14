@@ -57,8 +57,8 @@ class point:
 		self.phi2=atan2(x,z)
 		self.phi_initial2=self.phi2
 		#Rotations 4D
-		self.db=0
-		self.doublerotate_initial=0
+		self.Rxyzw=0
+		self.Rxyzw_initial=0
 		self.Rxy=0
 		self.Rxy_initial=0
 		self.Rzw=0
@@ -93,12 +93,12 @@ class point:
 		if "(" in self.nom:
 			self.nom=str((round(self.x,3),round(self.y,3),round(self.z,3)))
 
-	def doublerotate(self,db):
+	def rotate_Rxyzw(self,Rxyzw):
 		'''
 		même principe, axe de la 4D mais avec 2 rotations en même temps
 		'''
-		theta=(db+self.doublerotate_initial)-self.db
-		self.db=self.doublerotate_initial+db
+		theta=(Rxyzw+self.Rxyzw_initial)-self.Rxyzw
+		self.Rxyzw=self.Rxyzw_initial+Rxyzw
 
 		coos=np.array([[self.x],[self.y],[self.z],[self.w]])
 		R=np.array([[cos(theta),-sin(theta),0,0],[sin(theta),cos(theta),0,0],[0,0,cos(theta),-sin(theta)],[0,0,sin(theta),cos(theta)]])
@@ -190,10 +190,10 @@ def rotation_Rxz(rien):
 		dot.rotate_Rxz(radian(int(Rxz.get())))
 	affichage_objet(objet)
 
-def doublerotate(rien):
+def rotation_Rxyzw(rien):
 	global objet
 	for dot in objet.points:
-		dot.doublerotate(radian(int(Rw.get())))
+		dot.rotate_Rxyzw(radian(int(Rxyzw.get())))
 	affichage_objet(objet)
 
 def rotation_Rxy(rien):
@@ -256,7 +256,7 @@ def initialisation():
 	global objet
 	choix=value.get()
 	Rxz.set(0)
-	Rw.set(0)
+	Rxyzw.set(0)
 	Rxy.set(0)
 	Rzw.set(0)
 
@@ -421,17 +421,17 @@ def revolution_zw():
 		revolution=0
 		fenetre.after_cancel(recursif)
 
-def revolution_w():
-	recursif = fenetre.after(int(vitesse_revolution.get()),revolution_w)
+def revolution_xyzw():
+	recursif = fenetre.after(int(vitesse_revolution.get()),revolution_xyzw)
 	global objet, revolution, revolution_angle_init
 	if revolution==0:
 		revolution+=1
-		revolution_angle_init=int(Rw.get())
+		revolution_angle_init=int(Rxyzw.get())
 	elif revolution<360:
 		revolution+=1
 		teta=(revolution_angle_init+revolution)%360
-		Rw.set(teta)
-		doublerotate("")
+		Rxyzw.set(teta)
+		rotation_Rxyzw("")
 	else:
 		revolution=0
 		fenetre.after_cancel(recursif)
@@ -439,11 +439,44 @@ def revolution_w():
 def tester_parametres(rien):
 	affichage_objet(objet)
 
+def Clic_gauche(event):
+	global x_clic, y_clic
+	x_clic=event.x
+	y_clic=event.y
+
+def Clic_gauche_hold(event):
+	global x_clic, y_clic
+	if event.x != x_clic or event.y != y_clic:
+		Rxz.set((int(Rxz.get()) + event.y - y_clic)%360)
+		Rxy.set((int(Rxy.get()) + event.x - x_clic)%360)
+		rotation_Rxz("")
+		rotation_Rxy("")
+		x_clic=event.x
+		y_clic=event.y
+
+def Clic_droit(event):
+	global x_clic, y_clic
+	x_clic=event.x
+	y_clic=event.y
+
+def Clic_droit_hold(event):
+	global x_clic, y_clic
+	if event.x != x_clic or event.y != y_clic:
+		Rzw.set((int(Rzw.get()) + event.x - x_clic)%360)
+		rotation_Rzw("")
+		x_clic=event.x
+		y_clic=event.y
+
+
 fenetre=Tk()
 fenetre.attributes('-fullscreen', True)
 Canevas=Canvas(fenetre,height=hauteur,width=largeur)
 Canevas.pack(side=LEFT)
 
+Canevas.bind('<B1-Motion>',  Clic_gauche_hold)
+Canevas.bind('<Button-1>',  Clic_gauche)
+Canevas.bind('<B3-Motion>',  Clic_droit_hold)
+Canevas.bind('<Button-3>',  Clic_droit)
 
 Rxz=StringVar()
 Rxz.set(0)
@@ -460,10 +493,10 @@ Rzw.set(0)
 angle_Rzw=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Rotation ZW',  variable=Rzw,  command=rotation_Rzw)
 angle_Rzw.pack()
 
-Rw=StringVar()
-Rw.set(0)
-angle_Rw=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Double rotation',  variable=Rw,  command=doublerotate)
-angle_Rw.pack()
+Rxyzw=StringVar()
+Rxyzw.set(0)
+angle_Rxyzw=Scale(fenetre,  orient='horizontal',  from_=0,  to=360,  resolution=1,  tickinterval=120,  label='Double rotation',  variable=Rxyzw,  command=rotation_Rxyzw)
+angle_Rxyzw.pack()
 
 demarrer = Button(fenetre,  text = 'Start',  command = initialisation)
 demarrer.pack()
@@ -492,8 +525,8 @@ Revolution_xy = Button(fenetre,  text = 'Revolution xy',  command = revolution_x
 Revolution_xy.pack()
 Revolution_zw = Button(fenetre,  text = 'Revolution zw',  command = revolution_zw)
 Revolution_zw.pack()
-Revolution_w = Button(fenetre,  text = 'Revolution w',  command = revolution_w)
-Revolution_w.pack()
+Revolution_xyzw = Button(fenetre,  text = 'Revolution w',  command = revolution_xyzw)
+Revolution_xyzw.pack()
 
 
 
