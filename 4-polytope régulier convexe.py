@@ -3,9 +3,7 @@ from math import sqrt, atan2, cos, sin, pi
 import numpy as np
 import itertools
 from sympy.combinatorics import Permutation
-import scipy.constants
-
-g_ratio=scipy.constants.golden
+from scipy.constants import golden as g_ratio
 
 hauteur=900
 largeur=1150
@@ -66,7 +64,6 @@ class point:
 		#point projeté en 3D
 		self.projections()
 
-
 		if nom=="":
 			self.nom=str((round(x,3),round(y,3),round(z,3)))
 		else:
@@ -78,7 +75,7 @@ class point:
 		on recalcule x, y z
 		problème : le décalage indiqué sur l'écran avec les curseurs ne correspond plus au décalage réel.
 		pour corriger ça et donc avoir un décalage cohérent pour tous les points, c'est la valeur d'origine dans "décalage par rapport à la valeur d'origine" qu'il faut changer
-		donc je recalcule la valeur d'origine
+		donc je recalcule la "nouvelle" valeur d'origine
 		'''
 		theta=(phi2+self.phi_initial2)-self.phi2
 		self.phi2=self.phi_initial2+phi2
@@ -180,7 +177,6 @@ class objet_4D:
 		position_points=[dots[0].x3d for dots in self.arretes] + [dots[1].x3d for dots in self.arretes]
 		self.min_distance_point=min(position_points)
 		self.max_distance_point=max(position_points)
-		#print(self.min_moyenne_largeur,self.max_moyenne_largeur, moyenne_largeur)
 				
 		print("{} arrêtes".format(len(self.arretes)))
 
@@ -525,9 +521,10 @@ Revolution_xy = Button(fenetre,  text = 'Revolution xy',  command = revolution_x
 Revolution_xy.pack()
 Revolution_zw = Button(fenetre,  text = 'Revolution zw',  command = revolution_zw)
 Revolution_zw.pack()
-Revolution_xyzw = Button(fenetre,  text = 'Revolution w',  command = revolution_xyzw)
+Revolution_xyzw = Button(fenetre,  text = 'Revolution xyzw',  command = revolution_xyzw)
 Revolution_xyzw.pack()
 
+vitesse_revolution=StringVar()
 
 
 #Sliders pour trouver la meilleure visualisation de chaque objet
@@ -550,7 +547,5 @@ lumiere_w_var=StringVar()
 lumiere_w_var.set(0)
 #lumiere_w_scale=Scale(fenetre,  orient='horizontal',  from_=0.1,  to=5,  resolution=0.1,  tickinterval=1,  label='Lumière',  variable=lumiere_w_var, command=tester_parametres)
 #lumiere_w_scale.pack()
-
-vitesse_revolution=StringVar()
 
 fenetre.mainloop()
